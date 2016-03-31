@@ -11,7 +11,7 @@
         />
 
         <template id="report_delivery_order_document">
-            <t t-name="stock_interface_improvements.report_delivery_order_document">
+            <t t-name="stock_delivery_note_report.report_delivery_order_document">
                 <t t-call="report.html_container">
                     <t t-foreach="docs" t-as="o">
                         <t t-call="report.external_layout">
@@ -91,9 +91,9 @@
                                                 <span t-esc="move.product_id.name"/>
                                                 <br/>
                                                 <span t-esc="move.product_id.default_code"/>
-                                                <t t-if="move.product_id.ean13"><br/>
-                                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move.product_id.ean13, 600, 100)" style="width:120px;height:20px"/>
-                                                    <span t-esc="move.product_id.ean13"/>
+                                                <t t-if="move.product_id.barcode"><br/>
+                                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move.product_id.barcode, 600, 100)" style="width:120px;height:20px"/>
+                                                    <span t-esc="move.product_id.barcode"/>
                                                 </t>
                                             </td>
                                             <td><span t-esc="move.product_uom_qty"/> <span t-esc="move.product_uom.name"/></td>
@@ -141,8 +141,8 @@
                                             <tr t-foreach="picking['moves']" t-as="move">
                                                 <td><t t-if="move['brand']"><span t-esc="move['brand']"/> - </t><span t-esc="move['name']"/><br/>
                                                     <span t-esc="move['ref']"/>
-                                                    <t t-if="move['ean13']"><br/>
-                                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move['ean13'], 600, 100)" style="width:120px;height:20px"/> <span t-esc="move['ean13']"/>
+                                                    <t t-if="move['barcode']"><br/>
+                                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move['barcode'], 600, 100)" style="width:120px;height:20px"/> <span t-esc="move['barcode']"/>
                                                     </t>
                                                 </td>
                                                 <td><span t-esc="move['qty']"/> <span t-esc="move['uom']"/></td>
@@ -221,10 +221,10 @@
 
         <template id="report_delivery_order">
             <t t-call="report.html_container">
-                <t t-foreach="doc_ids" t-as="doc_id">
-                    <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'stock_interface_improvements.report_delivery_order_document')"/>
-                </t>
-            </t>
+            	<t t-foreach="docs" t-as="o">
+					<t t-call="stock_delivery_note_report.report_delivery_order_document" t-lang="o.partner_id.lang"/>
+				</t>
+			</t>
         </template>
     </data>
 </openerp>
