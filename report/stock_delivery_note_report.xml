@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <report 
+            string="Stock Delivery Note" 
+            id="action_report_delivery_order" 
+            model="stock.delivery.note" 
+            report_type="qweb-pdf"
+            name="stock_delivery_note_report.report_delivery_order" 
+            file="report_delivery_order" 
+        />
+
+        <template id="report_delivery_order_document">
+            <t t-name="stock_delivery_note_report.report_delivery_order_document">
+                <t t-call="report.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-call="report.external_layout">
+                            <div class="page">
+                                <div>
+                                    <div style="float: left; width: 60%;">
+                                        <div t-if="o.partner_invoice_id">
+                                            <small>
+                                                <strong>Invoice Address</strong>
+                                            </small>
+                                            <br/>
+                                            <span t-field="o.partner_invoice_id"/>
+                                            <address t-field="o.partner_invoice_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: true}"/>
+                                            <t t-if="o.partner_invoice_id.vat"><span t-field="o.partner_invoice_id.vat"/></t>
+                                        </div>
+                                    </div>
+                                    <div style="float: right; width: 40%;">
+                                        <div t-if="o.partner_shipping_id">
+                                            <small>
+                                                <strong>Delivery Address</strong>
+                                            </small>
+                                            <br/>
+                                            <span t-field="o.partner_shipping_id"/>
+                                            <address t-field="o.partner_shipping_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: true}"/>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <p style="clear: both;"></p>
+                                <h1 class="text-left" >Delivery Note</h1>
+                                <h3>Date: <span t-esc="time.strftime('%d-%m-%Y',time.strptime(o.date,'%Y-%m-%d %H:%M:%S'))"/></h3>
+                                <br/>
+                                <t t-foreach="o.picking_ids" t-as="picking">
+                                    <h2>Delivery Number: <span t-esc="picking.name"/></h2>
+                                    <h4>Order Number: <span t-esc="picking.origin"/></h4>
+                                    <!--<table class="table table-condensed table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Order Number</th>
+                                                <th>State</th>
+                                                <t t-if="picking.backorder_id"><th>Backorder of</th></t>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <span t-esc="picking.origin"/>
+                                                </td>
+                                                <td>
+                                                    <span t-esc="picking.state"/>
+                                                </td>
+                                                <t t-if="picking.backorder_id">
+                                                    <td>
+                                                        <span t-esc="picking.backorder_id.name"/>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    -->
+                                    <table class="table table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Quantity</th>
+                                                <!--<th>State</th>-->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="picking.move_lines" t-as="move">
+                                                <!--<<t t-if="move.state=='done'">-->
+                                                    <tr>
+                                                        <td><t t-if="move.product_id.product_brand_id"><span t-esc="move.product_id.product_brand_id.name"/> - </t><span t-esc="move.product_id.name"/><br/>
+                                                            <span t-esc="move.product_id.default_code"/>
+                                                            <t t-if="move.product_id.ean13"><br/>
+                                                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move.product_id.ean13, 600, 100)" style="width:120px;height:20px"/> <span t-esc="move.product_id.ean13"/>
+                                                            </t>
+                                                        </td>
+                                                        <td><span t-esc="move.product_qty"/> <span t-esc="move.product_uom.name"/></td>
+                                                        <!--<td><span t-esc="move.state"/></td>-->
+                                                    </tr>
+                                                <!--<</t>-->
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </t>
+
+                              
+                                <br/>
+                                <strong>Acknowledgment:</strong>
+                                <table width="50%" height="70px">
+                                    <tr>
+                                        <td style="border: 1px black solid;">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_delivery_order">
+            <t t-call="report.html_container">
+            	<t t-foreach="docs" t-as="o">
+					<t t-call="stock_delivery_note_report.report_delivery_order_document" t-lang="o.lang"/>
+				</t>
+			</t>
+        </template>
+    </data>
+</openerp>

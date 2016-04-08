@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_stock_delivery_note_report" model="ir.ui.view">
+            <field name="name">Delivery note</field>
+            <field name="model">delivery.note.lines</field>
+            <field name="arch" type="xml">
+                <form string="Stock delivery note">
+                    <group string="Customer">
+                        <field name="partner_id"/>
+                    </group>
+                    <group string="Products">
+                        <field name="line_ids">
+                            <tree>
+                                <field name="product_name"/>
+                                <field name="ordered_product_qty"/>
+                                <field name="available_product_qty"/>
+                             </tree>
+                        </field>
+                    </group>                 
+                    <footer>
+                        <button name="transfer_products_and_create_delivery_note" string="Transfer products and print delivery note" type="object" class="oe_highlight" />
+                        <button name="print_last_delivery_note" string="Print last delivery note" type="object" class="oe_highlight" />
+                        <button name="print_order_form" string="Print order form" type="object" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_delivery_note_report" model="ir.actions.act_window">
+            <field name="name">Stock delivery note</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">delivery.note.lines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_stock_delivery_note_report"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            name="Delivery note / Order form"
+            parent="stock.menu_stock_warehouse_mgmt"
+            action="action_stock_delivery_note_report"
+            id="stock_delivery_note_report.stock_delivery_note_report"/>
+    </data>
+</openerp>
