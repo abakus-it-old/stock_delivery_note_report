@@ -44,7 +44,6 @@
                                 <h3>Date: <span t-esc="time.strftime('%d-%m-%Y')"/></h3>
 
                                 <!-- Current Picking -->
-                                <!--
                                 <h2>Delivery: <span t-esc="o.name"/></h2>
                                 <table class="table table-condensed table-bordered">
                                     <thead>
@@ -101,7 +100,6 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                -->
 
                                 <t t-foreach="o.get_report_data_picking_lists_out_from_partner(o.id, o.sale_id.partner_invoice_id)" t-as="picking">
                                     <h2>Delivery Number: <span t-esc="picking['name']"/></h2>
